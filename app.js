@@ -5,6 +5,7 @@ var cors = require('cors');
 //! Routers import
 const userRouter = require('./routes/user');
 const quizeRouter = require('./routes/quize');
+const quizeDataRouter = require('./routes/quizeData');
 
 const { errorHandeler, wrongPath } = require('./error/error');
 
@@ -15,6 +16,14 @@ app.use(morgan('tiny'));
 
 app.use('/api/user', userRouter);
 app.use('/api/quize', quizeRouter);
+app.use(
+  '/api/quizedata',
+  (req, res, next) => {
+    console.log(req.body);
+    next();
+  },
+  quizeDataRouter
+);
 
 app.get('*', wrongPath);
 app.use(errorHandeler);

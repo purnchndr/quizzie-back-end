@@ -4,8 +4,13 @@ const {
   createQuize,
   getAllQuize,
   getQuize,
+  getAllQuizeAnalysis,
 } = require('../controllers/quizeData');
 
-router.get('/', getAllQuize).get('/:id', getQuize).post('/:id', createQuize);
+router
+  .get('/:id', getQuize)
+  .get('/all/:id', getAllQuize)
+  .post('/:id', createQuize)
+  .get('/quizeanalysis/:id', getAllQuizeAnalysis);
 
 module.exports = router;

@@ -8,7 +8,6 @@ const getDashboard = async (req, res, next) => {
       return res
         .status(404)
         .json({ message: 'Quize not found', result: false });
-    console.log(quize);
     const impressions = quize.reduce(
       (sum, curr) => sum + (curr?.impressions || 0),
       0
@@ -40,7 +39,6 @@ const getAllQuizes = async (req, res, next) => {
       return res
         .status(404)
         .json({ message: 'Quize not found', result: false });
-    console.log(quize);
     const impressions = quize.reduce(
       (sum, curr) => sum + (curr?.impressions || 0),
       0

@@ -1,4 +1,5 @@
 const QuizeData = require('../models/quizeData');
+const Quize = require('../models/quize');
 
 const createQuize = async (req, res, next) => {
   try {
@@ -34,7 +35,7 @@ const getQuize = async (req, res, next) => {
 };
 
 const getAllQuize = async (req, res, next) => {
-  const id = req.query.id;
+  const id = req.params.id;
   try {
     if (!id)
       return res.status(404).json({
@@ -52,8 +53,34 @@ const getAllQuize = async (req, res, next) => {
   }
 };
 
+const getAllQuizeAnalysis = async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    let quize = await Quize.findById(id);
+    console.log(quize);
+
+    if (!quize)
+      return res.status(404).json({
+        message: 'Quize not found',
+        result: false,
+      });
+
+    let allQuizes = await QuizeData.find({ quize: id });
+    let analytics = allQuizes.quizes;
+
+    res.status(200).json({
+      message: 'Data fetched succesfully',
+      allQuizes,
+      result: true,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   createQuize,
   getAllQuize,
   getQuize,
+  getAllQuizeAnalysis,
 };

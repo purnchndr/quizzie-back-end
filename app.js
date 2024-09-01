@@ -2,11 +2,9 @@ const express = require('express');
 var morgan = require('morgan');
 var cors = require('cors');
 
-//! Routers import
 const userRouter = require('./routes/user');
 const quizeRouter = require('./routes/quize');
 const quizeDataRouter = require('./routes/quizeData');
-const analyticsRouter = require('./routes/analytics');
 
 const { errorHandeler, wrongPath } = require('./error/error');
 
@@ -18,7 +16,6 @@ app.use(morgan('tiny'));
 app.use('/api/user', userRouter);
 app.use('/api/quize', quizeRouter);
 app.use('/api/quizedata', quizeDataRouter);
-app.use('/api/analytics', analyticsRouter);
 
 app.get('*', wrongPath);
 app.use(errorHandeler);

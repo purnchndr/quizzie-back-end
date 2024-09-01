@@ -31,7 +31,7 @@ const loginUser = async (req, res, next) => {
     if (!user)
       return res
         .status(404)
-        .message({ message: 'Email or Password is incorrect', result: false });
+        .json({ message: 'Email or Password is incorrect', result: false });
     const isCorrectPassword = bcrypt.compareSync(password, user.password);
     if (isCorrectPassword) {
       const token = jwt.sign({ _id: user._id }, process.env.JWS_SECRET);

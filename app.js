@@ -6,6 +6,7 @@ var cors = require('cors');
 const userRouter = require('./routes/user');
 const quizeRouter = require('./routes/quize');
 const quizeDataRouter = require('./routes/quizeData');
+const analyticsRouter = require('./routes/analytics');
 
 const { errorHandeler, wrongPath } = require('./error/error');
 
@@ -16,14 +17,8 @@ app.use(morgan('tiny'));
 
 app.use('/api/user', userRouter);
 app.use('/api/quize', quizeRouter);
-app.use(
-  '/api/quizedata',
-  (req, res, next) => {
-    console.log(req.body);
-    next();
-  },
-  quizeDataRouter
-);
+app.use('/api/quizedata', quizeDataRouter);
+app.use('/api/analytics', analyticsRouter);
 
 app.get('*', wrongPath);
 app.use(errorHandeler);

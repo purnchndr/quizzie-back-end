@@ -54,9 +54,26 @@ const getQuize = async (req, res, next) => {
   try {
     const id = req.params.id;
     const user = req.user;
-    // let quize = await Quize.findOne({ _id: id, admin: user }).select('-__v');
+    let quize = await Quize.findOne({ _id: id });
+    if (!quize)
+      return res
+        .status(404)
+        .json({ message: 'Quize not found', result: false });
+    return res.status(200).json({
+      message: 'Quize fetched succesfully',
+      quize,
+      result: true,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const takeQuize = async (req, res, next) => {
+  try {
+    const id = req.params.id;
     let quize = await Quize.findOneAndUpdate(
-      { _id: id, admin: user },
+      { _id: id },
       { $inc: { impressions: 1 } },
       { new: true }
     );
@@ -87,10 +104,44 @@ const getAllQuize = async (req, res, next) => {
   }
 };
 
+const getDashboard = async (req, res, next) => {
+  try {
+    const user = req.user;
+    let quize = await Quize.find({ admin: user });
+    if (!quize)
+      return res
+        .status(404)
+        .json({ message: 'Quize not found', result: false });
+    console.log(quize);
+    const impressions = quize.reduce(
+      (sum, curr) => sum + (curr?.impressions || 0),
+      0
+    );
+    const questions = quize.reduce(
+      (sum, curr) => sum + (curr?.questions?.length || 0),
+      0
+    );
+    const quizes = quize.length || 0;
+    const tranding = [...quize]
+      .sort((a, b) => b.impressions - a.impressions)
+      .filter(c => c.impressions >= 5);
+
+    return res.status(200).json({
+      message: 'Quize fetched succesfully',
+      analytics: { impressions, questions, quizes, tranding },
+      result: true,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   createQuize,
   updateQuize,
   deleteQuize,
   getAllQuize,
   getQuize,
+  getDashboard,
+  takeQuize,
 };
